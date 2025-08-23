@@ -13,6 +13,60 @@ To fix this, you can build the wheel package from source. See [Quickstart](quick
 polars-bio-intel kernel: [ 1611.175045] traps: python[8844] trap invalid opcode ip:709d3ec253cc sp:7ffcc28754e8 error:0 in polars_bio.abi3.so[709d36533000+9aab000]
 ```
 
+## macOS Specific Issues
+
+6. **What to do if I get `ModuleNotFoundError: No module named 'polars_bio.polars_bio'` on macOS?**
+   
+   This is usually caused by Python trying to import from a local development directory instead of the installed package.
+   
+   **Solutions:**
+   - Run Python from a different directory (not the polars-bio source directory):
+   ```bash
+   cd /tmp
+   python -c "import polars_bio; print('Success!')"
+   ```
+   - If you have an editable install, uninstall and reinstall normally:
+   ```bash
+   pip uninstall polars-bio -y
+   pip install polars-bio
+   ```
+
+7. **What to do if I get linking/symbol errors on macOS?**
+   
+   This typically happens with Python from Xcode Command Line Tools or architecture mismatches.
+   
+   **Solutions:**
+   - Use Python from Homebrew (recommended):
+   ```bash
+   brew install python@3.13
+   /opt/homebrew/bin/python3 -m pip install polars-bio
+   ```
+   - Or download Python from [python.org](https://python.org)
+   - Check your architecture matches:
+   ```bash
+   python -c "import platform; print(platform.machine())"
+   # Should show 'arm64' for Apple Silicon or 'x86_64' for Intel
+   ```
+
+8. **How to set up a clean environment for polars-bio on macOS?**
+   
+   **Recommended setup:**
+   ```bash
+   # Install Homebrew Python
+   brew install python@3.13
+   
+   # Create virtual environment
+   /opt/homebrew/bin/python3 -m venv polars-bio-env
+   source polars-bio-env/bin/activate
+   
+   # Install polars-bio
+   pip install --upgrade pip
+   pip install polars-bio
+   
+   # Test installation
+   python -c "import polars_bio; print('polars-bio installed successfully!')"
+   ```
+
 3. How to build the documentation?
    To build the documentation, you need to install the `polars-bio` package and then run the following command in the root directory of the repository:
 ```bash
